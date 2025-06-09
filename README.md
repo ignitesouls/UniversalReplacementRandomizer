@@ -19,7 +19,7 @@
 Clone this repository and reference the `.csproj` in your solution:
 
 ```sh
-git clone https://github.com/YOUR_USERNAME/UniversalReplacementRandomizer.git
+git clone https://github.com/ignitesouls/UniversalReplacementRandomizer.git
 ```
 
 Then, in your project:
