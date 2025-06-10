@@ -132,7 +132,7 @@ SPDX-License-Identifier: GPL-3.0-only
 
 ## 👤 Authors
 
-Built by psiphicode and collaborators, for use across multiple ELDEN RING modding projects including weapon and item randomization in the DLC.
+Built by psiphicode and collaborators, for use across multiple ELDEN RING modding projects including weapon, item, shop, enemy and boss randomization.
 
 ---
 

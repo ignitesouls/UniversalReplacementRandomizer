@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using System.Text;
 
-
 namespace UniversalReplacementRandomizer;
 
 /// <summary>
@@ -32,7 +31,7 @@ public class SeedManager
         RandomNumberGenerator.Fill(bytes);
         return BitConverter.ToInt32(bytes, 0) & int.MaxValue;
     }
-    
+
     private static int DeriveSeedFromKey(int baseSeed, string context)
     {
         // seeds are generated from hashing: seed = Sha256(baseSeedBytes + contextBytes)
@@ -66,7 +65,7 @@ public class SeedManager
 
         return BitConverter.ToInt32(hash, 0) & int.MaxValue;
     }
-    
+
     public Random GetRandomById(int id)
     {
         // if the random number generator exists, return it. else, create it and then return it.

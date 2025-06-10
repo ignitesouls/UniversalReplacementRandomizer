@@ -10,7 +10,7 @@ public class RandomizationGroup
 {
     private List<int> Targets;      // integers to be replaced
     private List<int> Replacements; // integers that can potentially replace any location in the targets array
-    
+
     private readonly IReplacementValidator? ReplacementValidator;
 
     public RandomizationGroup(List<int> targets, List<int> replacements, IReplacementValidator? replacementValidator = null)
@@ -34,12 +34,12 @@ public class RandomizationGroup
         }
         return targetsToReplacements;
     }
-    
+
     public Dictionary<int, int> ValidatedRandomize(Random rng)
     {
         if (ReplacementValidator == null)
             throw new Exception("ReplacementValidator not implemented!");
-        
+
         // FY shuffles arrays in-place. copy the replacements before randomizing.
         List<int> replacements = new(Replacements);
 
@@ -114,16 +114,14 @@ public class RandomizationGroup
     }
 }
 
-
-
-public class UniversalReplacementRandomizer
+public class ReplacementRandomizer
 {
     private readonly SeedManager SeedManager;
     private readonly Dictionary<string, RandomizationGroup> Groups; // SeedManager key => RandomizationGroup
-        
+
     public int GetBaseSeed() { return SeedManager.GetBaseSeed(); } // necessary for deterministic randomization
 
-    public UniversalReplacementRandomizer(int? baseSeed = null)
+    public ReplacementRandomizer(int? baseSeed = null)
     {
         Groups = new Dictionary<string, RandomizationGroup>();
         SeedManager = new SeedManager(baseSeed);
