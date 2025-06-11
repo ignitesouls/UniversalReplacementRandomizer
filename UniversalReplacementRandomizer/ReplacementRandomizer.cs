@@ -1,4 +1,6 @@
 ﻿// SPDX-License-Identifier: GPL-3.0-only
+using System.Diagnostics;
+
 namespace UniversalReplacementRandomizer;
 
 public interface IReplacementValidator
@@ -12,6 +14,9 @@ public class RandomizationGroup
     private List<int> Replacements; // integers that can potentially replace any location in the targets array
 
     private readonly IReplacementValidator? ReplacementValidator;
+
+    public List<int> GetTargets() {  return Targets; }
+    public List<int> GetReplacements() { return Replacements; }
 
     public RandomizationGroup(List<int> targets, List<int> replacements, IReplacementValidator? replacementValidator = null)
     {
@@ -120,6 +125,7 @@ public class ReplacementRandomizer
     private readonly Dictionary<string, RandomizationGroup> Groups; // SeedManager key => RandomizationGroup
 
     public int GetBaseSeed() { return SeedManager.GetBaseSeed(); } // necessary for deterministic randomization
+    public SeedManager GetSeedManager() { return SeedManager; }
 
     public ReplacementRandomizer(int? baseSeed = null)
     {
