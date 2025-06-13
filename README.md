@@ -61,7 +61,7 @@ var result = group.RetryingValidatedRandomize(rng, maxAttempts: 100);
 Orchestrates multiple named `RandomizationGroup` instances with a shared base seed:
 
 ```csharp
-var urr = new ReplacementRandomizer(baseSeed: 1234);
+var urr = new ReplacementRandomizer(prefix: "myPrefix", baseSeed: 1234);
 urr.AddGroup("dlcWeapons", group);
 var mapping = urr.RandomizeGroup("dlcWeapons");
 ```
@@ -120,7 +120,7 @@ This validator class keeps the constraints encoded as bitmaps.
 Provides cryptographically secure and namespaced deterministic randomness:
 
 ```csharp
-var sm = new SeedManager(12345);
+var sm = new SeedManager(prefix: "myPrefix", baseSeed: 12345);
 var rng = sm.GetRandomByKey("itemlots");
 ```
 
@@ -155,4 +155,4 @@ Built by psiphicode and collaborators, for use across multiple ELDEN RING moddin
 
 ## 🗓️ Last updated
 
-2025-06-09
+2025-06-13
