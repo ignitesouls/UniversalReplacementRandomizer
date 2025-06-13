@@ -56,12 +56,12 @@ var result = group.RetryingValidatedRandomize(rng, maxAttempts: 100);
 
 ---
 
-### `UniversalReplacementRandomizer`
+### `ReplacementRandomizer`
 
 Orchestrates multiple named `RandomizationGroup` instances with a shared base seed:
 
 ```csharp
-var urr = new UniversalReplacementRandomizer(baseSeed: 1234);
+var urr = new ReplacementRandomizer(baseSeed: 1234);
 urr.AddGroup("dlcWeapons", group);
 var mapping = urr.RandomizeGroup("dlcWeapons");
 ```
@@ -87,14 +87,31 @@ public interface IReplacementValidator
 
 #### Example:
 ```csharp
+
 public class EncodedBitmapValidator : IReplacementValidator
 {
+    private readonly Dictionary<int, int> TargetEncodedBitmaps;
+    private readonly Dictionary<int, int> ReplacementEncodedBitmaps;
+
+    public Dictionary<string, Func<int, int, bool>>? ValidatorsByKey { get; set; }
+
+    public EncodedBitmapValidator(Dictionary<int, int> targetEncodedBitmaps, Dictionary<int, int> replacementEncodedBitmaps)
+    {
+        TargetEncodedBitmaps = targetEncodedBitmaps;
+        ReplacementEncodedBitmaps = replacementEncodedBitmaps;
+    }
+
     public bool Validate(int target, int replacement)
     {
-        // Your logic here
+        if (!TargetEncodedBitmaps.TryGetValue(target, out int targetEncodedBitmap))
+            return true;                                              // the target doesn't have any conflicts
+        if (!ReplacementEncodedBitmaps.TryGetValue(replacement, out int replacementEncodedBitmap))
+            return true;                                              // the replacement doesn't have any conflicts
+        return (targetEncodedBitmap & replacementEncodedBitmap) == 0; // we have to check for conflicts between the two
     }
 }
 ```
+This validator class keeps the constraints encoded as bitmaps.
 
 ---
 
