@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace UniversalReplacementRandomizer;
 
-public class RandomizationGroupMN
+public class OptimizedRandomizationGroup
 {
     private readonly int M;
     private readonly int N;
     private readonly IReplacementValidator? Validator;
 
-    public RandomizationGroupMN(int m, int n, IReplacementValidator? validator = null)
+    public OptimizedRandomizationGroup(int m, int n, IReplacementValidator? validator = null)
     {
         if (m <= 0 || n <= 0)
         {
@@ -33,30 +33,6 @@ public class RandomizationGroupMN
         result.ReverseFisherYatesShuffleN(n, rng);
 
         return result.Length > M ? result[..M] : result;
-    }
-
-    public int[] ValidatedRandomize(Random rng)
-    {
-        if (Validator == null)
-        {
-            throw new Exception("ReplacementValidator not implemented!");
-        }
-
-        int[] result = GenerateDistribution(rng);
-
-        foreach ((int targetIndex, int replacementIndex) in result.LazyReverseFisherYatesShuffleWithIndex(rng))
-        {
-            if (targetIndex >= M)
-            {
-                return result[..M];
-            }
-            if (!Validator.Validate(targetIndex, replacementIndex))
-            {
-                throw new Exception("Randomization failed to generate a valid result.");
-            }
-        }
-
-        return result;
     }
 
     public int[] RetryingValidatedRandomize(Random rng, int? maxAttempts = 100)

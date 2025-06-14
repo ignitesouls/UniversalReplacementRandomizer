@@ -6,17 +6,23 @@ using System.Threading.Tasks;
 
 namespace UniversalReplacementRandomizer;
 
-public class ReplacementRandomizerMN
+public class OptimizedReplacementRandomizer
 {
+    // managed deterministic randomness. namespaced random number generators. don't leave home without it
     private readonly SeedManager SeedManager;
-    private readonly Dictionary<string, RandomizationGroupMN> Groups; // SeedManager key => RandomizationGroupMN
 
-    public int GetBaseSeed() { return SeedManager.GetBaseSeed(); } // necessary for deterministic randomization
-    public SeedManager GetSeedManager() { return SeedManager; } // caveat: could influence randomization if used outside of the ReplacementRandomizerMN
+    // SeedManager key => OptimizedRandomizationGroup
+    private readonly Dictionary<string, OptimizedRandomizationGroup> Groups;
 
-    public ReplacementRandomizerMN(string? prefix = null, int? baseSeed = null)
+    // necessary for deterministic randomization
+    public int GetBaseSeed() { return SeedManager.GetBaseSeed(); }
+
+    // caveat: could influence randomization if used outside of the OptimizedReplacementRandomizer
+    public SeedManager GetSeedManager() { return SeedManager; }
+
+    public OptimizedReplacementRandomizer(string? prefix = null, int? baseSeed = null)
     {
-        Groups = new Dictionary<string, RandomizationGroupMN>();
+        Groups = new Dictionary<string, OptimizedRandomizationGroup>();
         SeedManager = new SeedManager(prefix, baseSeed);
     }
 
@@ -30,8 +36,8 @@ public class ReplacementRandomizerMN
 
         foreach (string key in keys)
         {
-            Random rng = SeedManager.GetRandomByKey(key);  // retrieve the namespaced randomness generator
-            result[key] = Groups[key].Randomize(rng); // direct access by key, since it's generated from the dictionary
+            Random rng = SeedManager.GetRandomByKey(key);
+            result[key] = Groups[key].Randomize(rng);
         }
 
         return result;
@@ -40,7 +46,7 @@ public class ReplacementRandomizerMN
     public int[] RandomizeGroup(string key)
     {
         Random rng = SeedManager.GetRandomByKey(key);
-        if (!Groups.TryGetValue(key, out RandomizationGroupMN? group))
+        if (!Groups.TryGetValue(key, out OptimizedRandomizationGroup? group))
         {
             throw new Exception("Unrecognized key");
         }
@@ -51,7 +57,7 @@ public class ReplacementRandomizerMN
     public int[] RetryingRandomizeGroup(string key, int? maxAttempts = null)
     {
         Random rng = SeedManager.GetRandomByKey(key);
-        if (!Groups.TryGetValue(key, out RandomizationGroupMN? group))
+        if (!Groups.TryGetValue(key, out OptimizedRandomizationGroup? group))
         {
             throw new Exception("Unrecognized key");
         }
@@ -59,7 +65,7 @@ public class ReplacementRandomizerMN
         return group.RetryingValidatedRandomize(rng, maxAttempts);
     }
 
-    public void AddGroup(string key, RandomizationGroupMN group)
+    public void AddGroup(string key, OptimizedRandomizationGroup group)
     {
         // add a new randomization group
         if (Groups.ContainsKey(key))
