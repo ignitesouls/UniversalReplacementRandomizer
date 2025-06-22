@@ -9,8 +9,8 @@ namespace UniversalReplacementRandomizer;
 
 public class OptimizedRandomizationGroup
 {
-    private readonly int M;
-    private readonly int N;
+    public readonly int M;
+    public readonly int N;
     private readonly IReplacementValidator? Validator;
 
     public OptimizedRandomizationGroup(int m, int n, IReplacementValidator? validator = null)
